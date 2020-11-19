@@ -1,21 +1,90 @@
-"""A one line summary of the module or program, terminated by a period.
+"""Implements the utilities needed to validate and submit a configuration file to the Watchlist API.
 
-Leave one blank line.  The rest of this docstring should contain an
-overall description of the module or program.  Optionally, it may also
-contain a brief description of exported classes and functions and/or usage
-examples.
-
-  Typical usage example:
-
-  foo = ClassFoo()
-  bar = foo.FunctionBar()
 """
+import csv
 import pathlib
+import re
 from typing import Tuple
 
 import requests
 
 from watchlist_api_client.data_structures import RequestSummary
+
+
+class ImproperFileFormat(Exception):
+    """An exception class that is raised when a Watchlist config file is improperly formatted"""
+    pass
+
+
+def validate_header(header: str) -> None:
+    """Validates if the header of a Watchlist config file is properly formatted.
+
+    Parameters
+    ----------
+    header: str
+        The header of a Watchlist configuration file.
+
+    Raises
+    ------
+    ImproperFileFormat
+        The exception is accompanied by a message that informs that the header is not
+        formatted accordingly to the specification.
+    """
+    header_pattern = r"^sourceId,RTSsymbol$"
+    if not re.match(header_pattern, header):
+        raise ImproperFileFormat("Improperly formatted header")
+
+
+def validate_row(row: str, row_index: int) -> None:
+    """Validates if a Watchlist configuration file's row is properly formatted.
+
+    Using a regular expression, the function checks if the components in the passed row
+    are in the correct order (first the source ID, followed by a comma, and the instrument
+    symbol) and if the symbol is specified in a valid format (containing only the allowed
+    characters for the definition of instruments symbols within the ICE Consolidated Feed
+    data platform).
+
+    Parameters
+    ----------
+    row: str
+        A row of a Watchlist configuration file.
+    row_index: str
+        The index of the row passed as an input to the function.
+
+    Raises
+    ------
+    ImproperFileFormat
+        The exception is accompanied by a message informing that a row is not formatted
+        accordingly to the specifications, together with the index of the row within the
+        file.
+    """
+    row_pattern = r"^[0-9]{3,4},[A-Z0-9\\+;()!*\-.:/$@&_%#]+$"
+    if not re.match(row_pattern, row):
+        raise ImproperFileFormat(f"Line {row_index} - Improperly formatted")
+
+
+def validate_watchlist_configuration_file(path_to_watchlist_config_file: str) -> None:
+    """Checks if a Watchlist configuration file is properly formatted.
+
+    Parameters
+    ----------
+    path_to_watchlist_config_file: str
+        The location of the Watchlist configuration file to validate.
+
+    Raises
+    ------
+    ImproperFileFormat
+        If the passed file is not properly formatted, an ImproperFileFormat exception is
+        raised, with attached a message that informs whether the file has an invalid
+        formatting due to a mis-formatted header or due to a mis-formatted row.
+    """
+    with pathlib.Path(path_to_watchlist_config_file).open('r') as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=',')
+        for index, row in enumerate(csv_reader):
+            if index == 0:
+                validate_header(','.join(row))
+            else:
+                validate_row(','.join(row), index)
 
 
 def react_to_status_code_200(response: requests.Response) -> RequestSummary:
@@ -45,7 +114,7 @@ def react_to_status_code_200(response: requests.Response) -> RequestSummary:
     """
     return RequestSummary(
         submission_time=response.headers.get('Date'),
-        summary=response.json()
+        summary=response.json(),
     )
 
 
