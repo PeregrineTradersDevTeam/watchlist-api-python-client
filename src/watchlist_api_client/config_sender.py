@@ -1,7 +1,7 @@
 """Implements the utilities needed to validate and submit a configuration file to the Watchlist API.
-
 """
 import csv
+import json
 import pathlib
 import re
 from typing import Tuple
@@ -160,3 +160,58 @@ def send_config(
     with requests.post(watchlist_endpoint, auth=credentials, files=config_payload) as response:
         response.raise_for_status()
         return react_to_status_code_200(response)
+
+
+def stringify_response_summary(request_summary: RequestSummary) -> str:
+    """Converts a RequestSummary object in a human-readable string.
+
+    Parameters
+    ----------
+    request_summary: RequestSummary
+        A RequestSummary named tuple containing the timestamp associated with the API call
+        that resulted in changes in the Watchlist configuration, and a dictionary that
+        summarises the actions taken as a result of the request that uploaded the new
+        configuration file.
+
+    Returns
+    -------
+    str
+        A representation of the content of the RequestSummary object in a human readable
+        form.
+    """
+    summary = ""
+    high_level_summary = (
+        f"{request_summary.submission_time}\n\n"
+        f"Actions performed as a result of the request:\n"
+        f"  - {request_summary.summary.get('nbCreated')} new sources have been activated\n"
+        f"  - {request_summary.summary.get('nbUpdated')} existing sources have been updated\n"
+        f"  - {request_summary.summary.get('nbFailed')} sources have failed\n"
+        f"  - {request_summary.summary.get('nbDeactivated')} existing sources have been deactivated"
+        f"\n\n"
+    )
+    summary += high_level_summary
+    if request_summary.summary.get('nbCreated') != 0:
+        created_source_ids = (
+            f"The following sources have been activated: "
+            f"{', '.join(request_summary.summary.get('created'))}\n"
+         )
+        summary += created_source_ids
+    if request_summary.summary.get('nbUpdated') != 0:
+        updated_source_ids = (
+            f"The following sources have been updated: "
+            f"{', '.join(request_summary.summary.get('updated'))}\n"
+        )
+        summary += updated_source_ids
+    if request_summary.summary.get('nbFailed') != 0:
+        failed_source_ids = (
+            f"The following sources have failed: "
+            f"{', '.join(request_summary.summary.get('failed'))}\n"
+        )
+        summary += failed_source_ids
+    if request_summary.summary.get('nbDeactivated') != 0:
+        deactivated_source_ids = (
+            f"The following sources have been deactivated: "
+            f"{', '.join(request_summary.summary.get('deactivated'))}\n"
+        )
+        summary += deactivated_source_ids
+    return summary
