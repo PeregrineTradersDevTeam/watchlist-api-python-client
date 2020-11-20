@@ -51,6 +51,31 @@ class TestFormatUTCTimestamp:
         # Cleanup - none
 
 
+class TestConvertRawUTCTimestampToString:
+    def test_conversion_to_string_timestamp_without_specified_date_format(self):
+        # Setup
+        raw_timestamp = "Wed, 18 Nov 2020 15:23:52 GMT"
+        # Exercise
+        converted_timestamp = helpers.convert_raw_utc_timestamp_to_string(raw_timestamp)
+        # Verify
+        expected_string_timestamp = "2020-11-18T15:23:52Z"
+        assert converted_timestamp == expected_string_timestamp
+        # Cleanup - none
+
+    def test_conversion_to_string_timestamp_with_specified_date_format(self):
+        # Setup
+        raw_timestamp = "Wed, 18 Nov 2020 15:23:52 GMT"
+        date_format = "%Y%m%dT%H%M%SZ"
+        # Exercise
+        converted_timestamp = helpers.convert_raw_utc_timestamp_to_string(
+            raw_timestamp, date_format,
+        )
+        # Verify
+        expected_string_timestamp = "20201118T152352Z"
+        assert converted_timestamp == expected_string_timestamp
+        # Cleanup - none
+
+
 class TestPrepareTimestampQueryString:
     def test_preparation_of_query_string(self):
         # Setup
