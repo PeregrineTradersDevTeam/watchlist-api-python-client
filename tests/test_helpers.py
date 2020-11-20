@@ -27,6 +27,30 @@ class TestParseUTCTimestamp:
         # Cleanup - none
 
 
+class TestFormatUTCTimestamp:
+    @pytest.mark.parametrize(
+        "datetime_object, date_format, formatted_timestamp", [
+            (
+                datetime.datetime(2020, 11, 18, 15, 23, 52, tzinfo=dateutil.tz.tzutc()),
+                "%Y-%m-%dT%H:%M:%SZ",
+                "2020-11-18T15:23:52Z",
+            ),
+            (
+                datetime.datetime(2020, 11, 18, 15, 23, 52, tzinfo=dateutil.tz.tzutc()),
+                "%Y%m%dT%H%M%SZ",
+                "20201118T152352Z",
+            )
+        ]
+    )
+    def test_formatting_of_datetime_object(self, datetime_object, date_format, formatted_timestamp):
+        # Setup - none
+        # Exercise
+        generated_datetime_string = helpers.format_utc_timestamp(datetime_object, date_format)
+        # Verify
+        assert generated_datetime_string == formatted_timestamp
+        # Cleanup - none
+
+
 class TestPrepareTimestampQueryString:
     def test_preparation_of_query_string(self):
         # Setup
