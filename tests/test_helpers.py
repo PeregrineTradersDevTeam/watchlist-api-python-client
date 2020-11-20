@@ -1,6 +1,30 @@
 import pytest
+import datetime
+import dateutil.tz
 
 from watchlist_api_client import helpers
+
+
+class TestParseUTCTimestamp:
+    @pytest.mark.parametrize(
+        "raw_utc_timestamp, expected_timestamp", [
+            (
+                'Wed, 18 Nov 2020 15:23:52 GMT',
+                datetime.datetime(2020, 11, 18, 15, 23, 52, tzinfo=dateutil.tz.tzutc())
+             ),
+            (
+                "2020-11-18T15:23:52Z",
+                datetime.datetime(2020, 11, 18, 15, 23, 52, tzinfo=dateutil.tz.tzutc()),
+             )
+        ]
+    )
+    def test_parsing_of_raw_timestamp(self, raw_utc_timestamp, expected_timestamp):
+        # Setup - none
+        # Exercise
+        parsed_timestamp = helpers.parse_utc_timestamp(raw_utc_timestamp)
+        # Verify
+        assert parsed_timestamp == expected_timestamp
+        # Cleanup - none
 
 
 class TestPrepareTimestampQueryString:
