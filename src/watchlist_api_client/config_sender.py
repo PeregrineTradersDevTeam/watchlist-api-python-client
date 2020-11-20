@@ -9,6 +9,7 @@ from typing import Tuple
 import requests
 
 from watchlist_api_client.data_structures import RequestSummary
+from watchlist_api_client.helpers import convert_raw_utc_datestamp_to_string
 
 
 class ImproperFileFormat(Exception):
@@ -215,3 +216,18 @@ def stringify_response_summary(request_summary: RequestSummary) -> str:
         )
         summary += deactivated_source_ids
     return summary
+
+
+def write_request_summary_to_json(
+    request_summary: RequestSummary,
+    path_to_parent_dir: str,
+) -> str:
+    formatted_time = convert_raw_utc_datestamp_to_string(
+        request_summary.submission_time,
+        date_format="%Y%m%dT%H%M%SZ",
+    )
+    file_path = pathlib.Path(path_to_parent_dir).joinpath(f"request_summary_{formatted_time}.json")
+    file_path.parent.mkdir(parents=True, exist_ok=True)
+    with file_path.open('w') as outfile:
+        json.dump(request_summary.summary, outfile, indent=2)
+    return file_path.as_posix()
