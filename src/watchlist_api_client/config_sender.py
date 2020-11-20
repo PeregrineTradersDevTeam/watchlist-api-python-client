@@ -9,7 +9,7 @@ from typing import Tuple
 import requests
 
 from watchlist_api_client.data_structures import RequestSummary
-from watchlist_api_client.helpers import convert_raw_utc_datestamp_to_string
+from watchlist_api_client.helpers import convert_raw_utc_timestamp_to_string
 
 
 class ImproperFileFormat(Exception):
@@ -241,7 +241,7 @@ def write_request_summary_to_json(
         The file path of the generated json file.
 
     """
-    formatted_time = convert_raw_utc_datestamp_to_string(
+    formatted_time = convert_raw_utc_timestamp_to_string(
         request_summary.submission_time,
         date_format="%Y%m%dT%H%M%SZ",
     )
