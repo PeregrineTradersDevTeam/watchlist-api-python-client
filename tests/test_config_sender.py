@@ -1,4 +1,5 @@
 import pathlib
+import json
 
 import pytest
 import requests
@@ -327,3 +328,55 @@ class TestStringifyResponseSummary:
         )
         assert generated_summary == expected_summary
         # Cleanup - none
+
+
+class TestWriteRequestSummaryToJSON:
+    def test_generation_of_correct_file_name(self):
+        # Setup
+        request_summary = data_structures.RequestSummary(
+            submission_time='Wed, 18 Nov 2020 10:06:41 GMT',
+            summary={
+                "nbCreated": 2,
+                "nbUpdated": 2,
+                "nbFailed": 2,
+                "nbDeactivated": 2,
+                "created": ['676', '680'],
+                "updated": ['207', '673'],
+                "failed": ['596', '686'],
+                "deactivated": ['684', '748']
+            }
+        )
+        path_to_parent_dir = pathlib.Path(__file__).resolve().parent / "static_data"
+        # Exercise
+        fpth = config_sender.write_request_summary_to_json(request_summary, path_to_parent_dir)
+        # Verify
+        assert fpth == path_to_parent_dir.joinpath(
+            "request_summary_20201118T100641Z.json"
+        ).as_posix()
+        # Cleanup - none
+        path_to_parent_dir.joinpath("request_summary_20201118T100641Z.json").unlink()
+
+    def test_content_of_generated_json_file(self):
+        # Setup
+        request_summary = data_structures.RequestSummary(
+            submission_time='Wed, 18 Nov 2020 10:06:41 GMT',
+            summary={
+                "nbCreated": 2,
+                "nbUpdated": 2,
+                "nbFailed": 2,
+                "nbDeactivated": 2,
+                "created": ['676', '680'],
+                "updated": ['207', '673'],
+                "failed": ['596', '686'],
+                "deactivated": ['684', '748']
+            }
+        )
+        path_to_parent_dir = pathlib.Path(__file__).resolve().parent / "static_data"
+        # Exercise
+        fpth = config_sender.write_request_summary_to_json(request_summary, path_to_parent_dir)
+        # Verify
+        with pathlib.Path(fpth).open(mode='rb') as infile:
+            content = json.load(infile)
+        assert content == request_summary.summary
+        # Cleanup - none
+        path_to_parent_dir.joinpath("request_summary_20201118T100641Z.json").unlink()
