@@ -1,3 +1,5 @@
+import pathlib
+
 import pytest
 import requests
 
@@ -87,7 +89,7 @@ class TestPackageRetrievedConfiguration:
                 b'748,F:FDAX\\Z20\n'
                 b'748,F:FESX\\H21\n'
                 b'748,F:FESX\\Z20\n'
-            )
+            ),
         )
         assert packaged_active_configuration == expected_active_configuration
         # Cleanup - none
@@ -181,7 +183,7 @@ class TestRetrieveConfig:
                 b'748,F:FDAX\\Z20\n'
                 b'748,F:FESX\\H21\n'
                 b'748,F:FESX\\Z20\n'
-            )
+            ),
         )
         assert retrieved_configuration == expected_configuration
         # Cleanup - none
@@ -216,7 +218,76 @@ class TestRetrieveConfig:
                 b'748,F:FDAX\\Z20\n'
                 b'748,F:FESX\\Z20\n'
                 b'748,F:FSMI\\Z20\n'
-            )
+            ),
         )
         assert retrieved_configuration == expected_configuration
         # Cleanup - none
+
+
+class TestRetrievedConfigWriter:
+    def test_correct_path_of_the_file(self):
+        # Setup
+        retrieved_config = RetrievedConfig(
+            timestamp="20201118T123052Z",
+            config_body=(
+                b'sourceId,RTSsymbol\n'
+                b'207,F:FDAX\\Z20\n'
+                b'207,F:FESX\\Z20\n'
+                b'207,F:FSMI\\Z20\n'
+                b'673,F2:ES\\Z20\n'
+                b'673,F2:NQ\\Z20\n'
+                b'676,F2:RTY\\Z20\n'
+                b'676,F2:SP\\Z20\n'
+                b'680,F2:RTY\\Z20\n'
+                b'680,F2:SP\\Z20\n'
+                b'684,F2:ES\\Z20\n'
+                b'684,F2:NQ\\Z20\n'
+                b'748,F:FDAX\\Z20\n'
+                b'748,F:FESX\\Z20\n'
+                b'748,F:FSMI\\Z20\n'
+            ),
+        )
+        path_to_directory = pathlib.Path(__file__).resolve().parent.joinpath(
+            "static_data",
+        ).as_posix()
+        # Exercise
+        path_to_file = config_retriever.retrieved_config_writer(retrieved_config, path_to_directory)
+        # Verify
+        expected_path_to_file = pathlib.Path(__file__).resolve().parent.joinpath(
+            "static_data", "watchlist_config@20201118T123052Z.csv",
+        ).as_posix()
+        assert path_to_file == expected_path_to_file
+        # Cleanup - none
+        pathlib.Path(path_to_file).unlink()
+
+    def test_correct_content_of_the_written_file(self):
+        # Setup
+        retrieved_config = RetrievedConfig(
+            timestamp="20201118T123052Z",
+            config_body=(
+                b'sourceId,RTSsymbol\n'
+                b'207,F:FDAX\\Z20\n'
+                b'207,F:FESX\\Z20\n'
+                b'207,F:FSMI\\Z20\n'
+                b'673,F2:ES\\Z20\n'
+                b'673,F2:NQ\\Z20\n'
+                b'676,F2:RTY\\Z20\n'
+                b'676,F2:SP\\Z20\n'
+                b'680,F2:RTY\\Z20\n'
+                b'680,F2:SP\\Z20\n'
+                b'684,F2:ES\\Z20\n'
+                b'684,F2:NQ\\Z20\n'
+                b'748,F:FDAX\\Z20\n'
+                b'748,F:FESX\\Z20\n'
+                b'748,F:FSMI\\Z20\n'
+            ),
+        )
+        path_to_directory = pathlib.Path(__file__).resolve().parent.joinpath(
+            "static_data",
+        ).as_posix()
+        # Exercise
+        path_to_file = config_retriever.retrieved_config_writer(retrieved_config, path_to_directory)
+        # Verify
+        assert pathlib.Path(path_to_file).read_bytes() == retrieved_config.config_body
+        # Cleanup - none
+        pathlib.Path(path_to_file).unlink()
