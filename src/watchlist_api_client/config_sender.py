@@ -222,6 +222,25 @@ def write_request_summary_to_json(
     request_summary: RequestSummary,
     path_to_parent_dir: str,
 ) -> str:
+    """Writes the request summary to a JSON file.
+
+    Parameters
+    ----------
+    request_summary: RequestSummary
+        A RequestSummary named-tuple containing the timestamp associated with the API call
+        that resulted in changes in the Watchlist configuration, and a dictionary that
+        summarises the actions taken as a result of the request that uploaded the new
+        configuration file.
+    path_to_parent_dir: str
+        The path to the directory where the json file containing the request summary
+        should be written to.
+
+    Returns
+    -------
+    str
+        The file path of the generated json file.
+
+    """
     formatted_time = convert_raw_utc_datestamp_to_string(
         request_summary.submission_time,
         date_format="%Y%m%dT%H%M%SZ",
