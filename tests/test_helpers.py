@@ -10,13 +10,13 @@ class TestParseUTCTimestamp:
         "raw_utc_timestamp, expected_timestamp", [
             (
                 'Wed, 18 Nov 2020 15:23:52 GMT',
-                datetime.datetime(2020, 11, 18, 15, 23, 52, tzinfo=dateutil.tz.tzutc())
+                datetime.datetime(2020, 11, 18, 15, 23, 52, tzinfo=dateutil.tz.tzutc()),
              ),
             (
                 "2020-11-18T15:23:52Z",
                 datetime.datetime(2020, 11, 18, 15, 23, 52, tzinfo=dateutil.tz.tzutc()),
-             )
-        ]
+             ),
+        ],
     )
     def test_parsing_of_raw_timestamp(self, raw_utc_timestamp, expected_timestamp):
         # Setup - none
@@ -39,8 +39,8 @@ class TestFormatUTCTimestamp:
                 datetime.datetime(2020, 11, 18, 15, 23, 52, tzinfo=dateutil.tz.tzutc()),
                 "%Y%m%dT%H%M%SZ",
                 "20201118T152352Z",
-            )
-        ]
+            ),
+        ],
     )
     def test_formatting_of_datetime_object(self, datetime_object, date_format, formatted_timestamp):
         # Setup - none
