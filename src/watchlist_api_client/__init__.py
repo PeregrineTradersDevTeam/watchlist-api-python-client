@@ -7,8 +7,7 @@ Watchlist API Client Library for Python
 """
 
 
-from watchlist_api_client import config_sender
-from watchlist_api_client import data_structures
+from watchlist_api_client import config_retriever, config_sender, data_structures, helpers
 
 
 __version__ = "0.1.0"
@@ -25,5 +24,7 @@ __coyright__ = "copyright (c) 2020 " + __author__
 
 __all__ = [
     "config_sender",
-    "data_structures"
+    "config_retriever",
+    "data_structures",
+    "helpers"
 ]
