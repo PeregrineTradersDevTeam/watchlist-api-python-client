@@ -62,6 +62,46 @@ class TestValidateRow:
         # Cleanup - none
 
 
+class TestValidateWatchlistConfigurationFile:
+    def test_validation_of_correct_configuration_file(self):
+        # Setup
+        path_to_file = pathlib.Path(__file__).resolve().parent.joinpath(
+            "static_data", "watchlist_config_20201118.csv"
+        )
+        # Exercise
+        # Verify
+        assert config_sender.validate_watchlist_configuration_file(path_to_file) is None
+        # Cleanup - none
+
+    def test_validation_of_file_with_incorrect_header(self):
+        # Setup
+        path_to_file = pathlib.Path(__file__).resolve().parent.joinpath(
+            "static_data", "watchlist_config_wrong_header.csv"
+        )
+        # Exercise
+        # Verify
+        with pytest.raises(config_sender.ImproperFileFormat) as invalid_config_file_format:
+            config_sender.validate_watchlist_configuration_file(path_to_file)
+        assert str(invalid_config_file_format.value) == (
+            f"Improperly formatted header"
+        )
+        # Cleanup - none
+
+    def test_validation_of_file_with_incorrect_rows(self):
+        # Setup
+        path_to_file = pathlib.Path(__file__).resolve().parent.joinpath(
+            "static_data", "watchlist_config_wrong_rows.csv"
+        )
+        # Exercise
+        # Verify
+        with pytest.raises(config_sender.ImproperFileFormat) as invalid_config_file_format:
+            config_sender.validate_watchlist_configuration_file(path_to_file)
+        assert str(invalid_config_file_format.value) == (
+            f"Line 6 - Improperly formatted"
+        )
+        # Cleanup - none
+
+
 class TestReactToStatusCode200:
     def test_reaction_to_status_code_200(self, mocked_successful_post_request):
         # Setup
