@@ -1,5 +1,4 @@
-"""Implements the utilities needed to validate and submit a configuration file to the Watchlist API.
-"""
+"""Implements the utilities needed to submit a configuration file to the Watchlist API."""
 import csv
 import json
 import pathlib
@@ -13,7 +12,8 @@ from watchlist_api_client.helpers import convert_raw_utc_timestamp_to_string
 
 
 class ImproperFileFormat(Exception):
-    """An exception class that is raised when a Watchlist config file is improperly formatted"""
+    """An exception class that is raised when a Watchlist config file is improperly formatted."""
+
     pass
 
 
@@ -195,7 +195,7 @@ def stringify_response_summary(request_summary: RequestSummary) -> str:
         created_source_ids = (
             f"The following sources have been activated: "
             f"{', '.join(request_summary.summary.get('created'))}\n"
-         )
+        )
         summary += created_source_ids
     if request_summary.summary.get('nbUpdated') != 0:
         updated_source_ids = (
