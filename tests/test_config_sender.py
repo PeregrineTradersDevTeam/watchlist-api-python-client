@@ -19,6 +19,14 @@ class TestValidateHeader:
         assert str(invalid_header_format.value) == f"Improperly formatted header"
         # Cleanup - none
 
+    def test_validation_of_correctly_formatted_header(self):
+        # Setup
+        header_to_validate = "sourceId,RTSsymbol"
+        # Exercise
+        # Verify
+        assert config_sender.validate_header(header_to_validate) is None
+        # Cleanup - none
+
 
 class TestValidateRow:
     def test_validation_of_incorrectly_formatted_row(self):
