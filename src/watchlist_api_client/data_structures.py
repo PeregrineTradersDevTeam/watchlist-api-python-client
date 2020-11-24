@@ -10,13 +10,13 @@ examples.
   foo = ClassFoo()
   bar = foo.FunctionBar()
 """
-from typing import Dict, NamedTuple
+from typing import Dict, List, NamedTuple, Union
 
 
 class RequestSummary(NamedTuple):
     """Stores the content of the request summary obtained after submitting a new configuration."""
     submission_time: str
-    summary: Dict
+    summary: Dict[str, Union[int, List[str]]]
 
 
 class RetrievedConfig(NamedTuple):
