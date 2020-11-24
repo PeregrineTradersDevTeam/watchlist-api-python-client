@@ -2,9 +2,7 @@
 # See the LICENSE file in the root of this repository
 # for complete details.
 
-"""
-Watchlist API Client Library for Python
-"""
+"""Watchlist API Client Library for Python."""
 
 
 from watchlist_api_client import config_retriever, config_sender, data_structures, helpers
@@ -26,5 +24,5 @@ __all__ = [
     "config_sender",
     "config_retriever",
     "data_structures",
-    "helpers"
+    "helpers",
 ]
