@@ -30,3 +30,42 @@ class TestValidateCredentialsType:
             cli.validate_credentials_type(credentials)
         # Cleanup - none
 
+
+class TestValidateCredentialsPresence:
+    def test_complete_set_of_credentials_scenario(self):
+        # Setup
+        credentials = ("Username", "Password")
+        # Exercise
+        # Verify
+        assert cli.validate_credentials_presence(credentials) is None
+        # Cleanup - none
+
+    def test_missing_username_scenario(self):
+        # Setup
+        credentials = (None, "Password")
+        # Exercise
+        # Verify
+        with pytest.raises(cli.MissingOnyxCredentialsError) as missing_credentials_error:
+            cli.validate_credentials_presence(credentials)
+        assert str(missing_credentials_error.value) == "Missing username"
+        # Cleanup - none
+
+    def test_missing_password_scenario(self):
+        # Setup
+        credentials = ("Username", None)
+        # Exercise
+        # Verify
+        with pytest.raises(cli.MissingOnyxCredentialsError) as missing_credentials_error:
+            cli.validate_credentials_presence(credentials)
+        assert str(missing_credentials_error.value) == "Missing password"
+        # Cleanup - none
+
+    def test_missing_credentials_scenario(self):
+        # Setup
+        credentials = (None, None)
+        # Exercise
+        # Verify
+        with pytest.raises(cli.MissingOnyxCredentialsError) as missing_credentials_error:
+            cli.validate_credentials_presence(credentials)
+        assert str(missing_credentials_error.value) == "Missing username and password"
+        # Cleanup - none
