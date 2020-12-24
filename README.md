@@ -1,7 +1,4 @@
 # Watchlist API Client Library for Python
-
-[TOC]
-
 ## Overview
 
 The Watchlist API Client Library for Python was designed to offer a simple and flexible access to the Intercontinental Exchange (ICE) Watchlist API. The library offers a way to programmatically interact with the Watchlist API to submit new Watchlist configuration files, and to retrieve active and deactivated configurations from the server. The functions in this package can be used to create scripts to automate the interaction with the Watchlist API, but at the same time we implemented a convenient command line interface that offers a way to interact with the API in a straightforward manner. The library is designed for Python client-application developers that need to script their interaction with the Watchlist API, but, at the same time, thanks to the CLI, the library can be used also by non-technical roles to interact with the API.
