@@ -247,10 +247,10 @@ will create a JSON file with the content structured as follows:
   "nbUpdated": 2,
   "nbFailed": 2,
   "nbDeactivated": 2,
-  "created": ['676', '680'],
-  "updated": ['207', '673'],
-  "failed": ['596', '686'],
-  "deactivated": ['684', '748']
+  "created": ["676", "680"],
+  "updated": ["207", "673"],
+  "failed": ["596", "686"],
+  "deactivated": ["684", "748"]
 }
 ```
 
