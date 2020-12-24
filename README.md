@@ -48,7 +48,7 @@ In order to operate the program you need to have an account with the Intercontin
 To use Watchlist API Python Client, first clone the repository on your device using the command below:
 
 ```shell
-git clone <insert-here-the-link-to-git-repo> watchlist-api-python-client
+git clone https://github.com/PeregrineTradersDevTeam/watchlist-api-python-client.git watchlist-api-python-client
 cd watchlist-api-python-client
 ```
 
